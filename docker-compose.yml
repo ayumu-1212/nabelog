@@ -1,0 +1,8 @@
+version: '3'
+services:
+  server:
+    build: ./services/server
+    volumes:
+       - "./services/server/src/:/usr/src/"
+    working_dir: /usr/src
+    tty: true
