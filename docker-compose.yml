@@ -11,9 +11,9 @@ services:
   client:
     build: ./services/client
     volumes:
-       - "./services/client/src/:/usr/src/"
-       - node-modules:/usr/src/node_modules
-    working_dir: /usr/src
+       - "./services/client/app/:/usr/app/"
+       - node-modules:/usr/app/node_modules
+    working_dir: /usr/app
     tty: true
     ports: 
       - 3000:3000
