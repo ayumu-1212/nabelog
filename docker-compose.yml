@@ -6,3 +6,17 @@ services:
        - "./services/server/src/:/usr/src/"
     working_dir: /usr/src
     tty: true
+    ports: 
+      - 8080:8080
+  client:
+    build: ./services/client
+    volumes:
+       - "./services/client/src/:/usr/src/"
+       - node-modules:/usr/src/node_modules
+    working_dir: /usr/src
+    tty: true
+    ports: 
+      - 3000:3000
+
+volumes:
+  node-modules:
