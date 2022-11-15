@@ -1,4 +1,12 @@
 version: '3'
+volumes:
+  node-modules:
+  mysql_data:
+
+networks:
+  golang_network:
+    external: true
+
 services:
   server:
     build: ./services/server
@@ -8,6 +16,29 @@ services:
     tty: true
     ports: 
       - 8080:8080
+    env_file:
+      - ./services/db/.env
+    depends_on:
+      - db
+    networks:
+      - golang_network
+  db:
+    build: ./services/db
+    tty: true
+    platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./services/db/.env
+    volumes:
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./services/db/init
+        target: /docker-entrypoint-initdb.d
+    networks:
+      - golang_network
   client:
     build: ./services/client
     volumes:
@@ -17,6 +48,3 @@ services:
     tty: true
     ports: 
       - 3000:3000
-
-volumes:
-  node-modules:
