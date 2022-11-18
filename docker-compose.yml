@@ -47,3 +47,14 @@ services:
     ports: 
       - 3000:3000
     container_name: client
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    volumes:
+      - ./services/swagger-ui/swagger:/usr/share/nginx/html/swagger
+    environment:
+      API_URL: ./swagger/swagger.yaml
+    ports:
+      - "8081:8080"
+    networks:
+      - golang_network
+    container_name: swagger-ui
