@@ -22,10 +22,11 @@ services:
       - db
     networks:
       - golang_network
+    hostname: server
   db:
     build: ./services/db
     tty: true
-    platform: linux/x86_64
+    platform: linux/amd64
     ports:
       - 3306:3306
     env_file:
@@ -35,6 +36,7 @@ services:
       - ./services/db/init:/docker-entrypoint-initdb.d
     networks:
       - golang_network
+    hostname: db
   client:
     build: ./services/client
     volumes:
@@ -44,3 +46,4 @@ services:
     tty: true
     ports: 
       - 3000:3000
+    hostname: client
