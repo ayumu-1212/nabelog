@@ -31,12 +31,8 @@ services:
     env_file:
       - ./services/db/.env
     volumes:
-      - type: volume
-        source: mysql_data
-        target: /var/lib/mysql
-      - type: bind
-        source: ./services/db/init
-        target: /docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+      - ./services/db/init:/docker-entrypoint-initdb.d
     networks:
       - golang_network
   client:
