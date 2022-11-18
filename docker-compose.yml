@@ -22,7 +22,7 @@ services:
       - db
     networks:
       - golang_network
-    hostname: server
+    container_name: server
   db:
     build: ./services/db
     tty: true
@@ -36,7 +36,7 @@ services:
       - ./services/db/init:/docker-entrypoint-initdb.d
     networks:
       - golang_network
-    hostname: db
+    container_name: db
   client:
     build: ./services/client
     volumes:
@@ -46,4 +46,4 @@ services:
     tty: true
     ports: 
       - 3000:3000
-    hostname: client
+    container_name: client
