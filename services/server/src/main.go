@@ -64,6 +64,29 @@ func main() {
 		})
 	})
 
+	router.PATCH("/shops/:id", func(context *gin.Context) {
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var shop Shop
+		db.First(&shop, id)
+
+    name := context.PostForm("name")
+    description := context.PostForm("description")
+		shop.Name = name
+		shop.Description = description
+		db.Save(&shop)
+
+		defer db.Close()
+		context.JSON(200, gin.H{
+			"message": "get shop",
+			"shop": shop,
+		})
+	})
+
 
   router.DELETE("/shops/:id", func(context *gin.Context) {
 		fmt.Println("kokoha?")
