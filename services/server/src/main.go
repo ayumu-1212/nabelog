@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"fmt"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -47,32 +48,51 @@ func main() {
 		})
 	})
 
-  router.POST("/shops/new", func(ctx *gin.Context) {
+	router.GET("/shops/:id", func(context *gin.Context) {
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var shop Shop
+		db.First(&shop, id)
+		defer db.Close()
+		context.JSON(200, gin.H{
+			"message": "get shop",
+			"shop": shop,
+		})
+	})
+
+
+  router.DELETE("/shops/:id", func(context *gin.Context) {
+		fmt.Println("kokoha?")
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var shop Shop
+		db.First(&shop, id)
+    db.Delete(&shop)
+    defer db.Close()
+
+    context.Redirect(302, "/")
+  })
+
+  router.POST("/shops/new", func(context *gin.Context) {
     db := sqlConnect()
-		fmt.Println(ctx)
-    name := ctx.PostForm("name")
-    description := ctx.PostForm("description")
+		fmt.Println(context)
+    name := context.PostForm("name")
+    description := context.PostForm("description")
     fmt.Println("create user " + name + " with description " + description)
     db.Create(&Shop{Name: name, Description: description})
     defer db.Close()
 
-    ctx.Redirect(302, "/")
+    context.Redirect(302, "/")
   })
 
-  // router.POST("/delete/:id", func(ctx *gin.Context) {
-  //   db := sqlConnect()
-  //   n := ctx.Param("id")
-  //   id, err := strconv.Atoi(n)
-  //   if err != nil {
-  //     panic("id is not a number")
-  //   }
-  //   var user User
-  //   db.First(&user, id)
-  //   db.Delete(&user)
-  //   defer db.Close()
-
-  //   ctx.Redirect(302, "/")
-  // })
 	log.Fatal(router.Run())
 }
 
