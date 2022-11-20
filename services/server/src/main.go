@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/gin-contrib/cors"
 )
 
 type Shop struct {
@@ -27,6 +28,36 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 
+  // ここからCorsの設定
+  router.Use(cors.New(cors.Config{
+    // アクセスを許可したいアクセス元
+    AllowOrigins: []string{
+			"http://localhost:3000",
+			// "https://127.0.0.1:3000",
+    },
+    // アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+    AllowMethods: []string{
+			"POST",
+			"GET",
+			"DELETE",
+			"PATCH",
+			"OPTIONS",
+    },
+    // 許可したいHTTPリクエストヘッダ
+    AllowHeaders: []string{
+			"Access-Control-Allow-Credentials",
+			"Access-Control-Allow-Headers",
+			"Content-Type",
+			"Content-Length",
+			"Accept-Encoding",
+			"Authorization",
+    },
+    // cookieなどの情報を必要とするかどうか
+    AllowCredentials: true,
+    // preflightリクエストの結果をキャッシュする時間
+    MaxAge: 24 * time.Hour,
+  }))
+
 	router.GET("/", func(context *gin.Context) {
 		context.HTML(200, "index.html", gin.H{})
 	})
@@ -39,6 +70,8 @@ func main() {
 
 	router.GET("/shops", func(context *gin.Context) {
 		db := sqlConnect()
+		clientIP := context.ClientIP()
+		fmt.Println(clientIP)
 		var shops []Shop
 		db.Order("created_at asc").Find(&shops)
 		defer db.Close()
