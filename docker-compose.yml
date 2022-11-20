@@ -3,10 +3,6 @@ volumes:
   node-modules:
   mysql_data:
 
-networks:
-  golang_network:
-    external: true
-
 services:
   server:
     build: ./services/server
@@ -14,14 +10,10 @@ services:
        - "./services/server/src/:/usr/src/"
     working_dir: /usr/src
     tty: true
-    ports: 
-      - 8080:8080
     env_file:
       - ./services/db/.env
     depends_on:
       - db
-    networks:
-      - golang_network
     container_name: server
   db:
     build: ./services/db
@@ -34,8 +26,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./services/db/init:/docker-entrypoint-initdb.d
-    networks:
-      - golang_network
     container_name: db
   client:
     build: ./services/client
@@ -55,6 +45,4 @@ services:
       API_URL: ./swagger/swagger.yaml
     ports:
       - "8081:8080"
-    networks:
-      - golang_network
     container_name: swagger-ui
