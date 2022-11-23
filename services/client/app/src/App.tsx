@@ -1,41 +1,14 @@
-import React, { useState } from "react";
-import './App.css';
-import Shop from "./entity/shop";
-import axios from "axios";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Shops from './pages/Shops';
 
 function App() {
-  const [shops, setShops] = useState<Shop[]>([])
-
-  const onButtonClick = () => {
-    axios.get("/shops")
-      .then((res) => setShops(res.data.shops))
-  }
-
-  const trs = [];
-  for (let i = 0; i < shops.length; i++) {
-    trs.push(
-      <tr key={shops[i].ID}>
-        <td>{shops[i].Name}</td>
-        <td>{shops[i].Description}</td>
-      </tr>
-    )
-  }
-
   return (
-    <div>
-      <button onClick={onButtonClick}>更新</button>
-      <table>
-        <thead>
-          <tr>
-            <th>店名</th>
-            <th>紹介文</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trs}
-        </tbody>
-      </table>
-    </div>
+    <BrowserRouter>
+      <h1>Hello React Router</h1>
+      <Routes>
+        <Route path="/shops" element={<Shops />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
