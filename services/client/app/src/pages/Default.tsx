@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom';
-function Default() {
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+function Default(): JSX.Element {
   return (
     <div>
       <h1>nabelogにようこそ！</h1>
@@ -9,7 +11,7 @@ function Default() {
         </li>
       </ul>
     </div>
-  );
+  )
 }
 
-export default Default;
+export default Default

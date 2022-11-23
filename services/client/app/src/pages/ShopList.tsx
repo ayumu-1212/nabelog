@@ -1,16 +1,21 @@
-import { useState } from 'react';
-import Shop from '../entity/shop';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import Shop from '../entity/shop'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
-function ShopList() {
-  const [shops, setShops] = useState<Shop[]>([]);
+function ShopList(): JSX.Element {
+  const [shops, setShops] = useState<Shop[]>([])
 
-  const onButtonClick = () => {
-    axios.get('/shops').then((res) => setShops(res.data.shops));
-  };
+  const onButtonClick = (): void => {
+    axios
+      .get('/shops')
+      .then((res) => setShops(res.data.shops))
+      .catch((err) => {
+        console.log('err:', err)
+      })
+  }
 
-  const trs = [];
+  const trs = []
   for (let i = 0; i < shops.length; i++) {
     trs.push(
       <tr key={shops[i].ID}>
@@ -20,7 +25,7 @@ function ShopList() {
           <Link to={`/shops/${shops[i].ID}`}>店舗詳細</Link>
         </td>
       </tr>
-    );
+    )
   }
 
   return (
@@ -37,7 +42,7 @@ function ShopList() {
         <tbody>{trs}</tbody>
       </table>
     </div>
-  );
+  )
 }
 
-export default ShopList;
+export default ShopList

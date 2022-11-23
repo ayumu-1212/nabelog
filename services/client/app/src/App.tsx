@@ -1,9 +1,10 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ShopList from './pages/ShopList';
-import Default from './pages/Default';
-import ShopDetail from './pages/ShopDetail';
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ShopList from './pages/ShopList'
+import Default from './pages/Default'
+import ShopDetail from './pages/ShopDetail'
 
-function App() {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
@@ -12,7 +13,7 @@ function App() {
         <Route path="/shops/:id" element={<ShopDetail />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App
