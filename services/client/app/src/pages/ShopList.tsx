@@ -1,12 +1,13 @@
-import { useState } from "react";
-import Shop from "../entity/shop";
-import axios from "axios";
+import { useState } from 'react';
+import Shop from '../entity/shop';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-function Shops() {
+function ShopList() {
   const [shops, setShops] = useState<Shop[]>([]);
 
   const onButtonClick = () => {
-    axios.get("/shops").then((res) => setShops(res.data.shops));
+    axios.get('/shops').then((res) => setShops(res.data.shops));
   };
 
   const trs = [];
@@ -15,6 +16,9 @@ function Shops() {
       <tr key={shops[i].ID}>
         <td>{shops[i].Name}</td>
         <td>{shops[i].Description}</td>
+        <td>
+          <Link to={`/shops/${shops[i].ID}`}>店舗詳細</Link>
+        </td>
       </tr>
     );
   }
@@ -27,6 +31,7 @@ function Shops() {
           <tr>
             <th>店名</th>
             <th>紹介文</th>
+            <th>詳細</th>
           </tr>
         </thead>
         <tbody>{trs}</tbody>
@@ -35,4 +40,4 @@ function Shops() {
   );
 }
 
-export default Shops;
+export default ShopList;

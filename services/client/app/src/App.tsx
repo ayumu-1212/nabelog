@@ -1,12 +1,15 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Shops from './pages/Shops';
+import ShopList from './pages/ShopList';
+import Default from './pages/Default';
+import ShopDetail from './pages/ShopDetail';
 
 function App() {
   return (
     <BrowserRouter>
-      <h1>Hello React Router</h1>
       <Routes>
-        <Route path="/shops" element={<Shops />} />
+        <Route path="/" element={<Default />} />
+        <Route path="/shops" element={<ShopList />} />
+        <Route path="/shops/:id" element={<ShopDetail />} />
       </Routes>
     </BrowserRouter>
   );
