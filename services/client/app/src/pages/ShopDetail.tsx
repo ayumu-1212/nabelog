@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Shop from '../entity/shop'
 import axios from 'axios'
@@ -8,7 +8,7 @@ function ShopDetail(): JSX.Element {
   const params = useParams()
   const shopId: number = Number(params.id)
 
-  const onButtonClick = (): void => {
+  useEffect(() => {
     axios
       .get(`/shops/${shopId}`)
       .then((res) => {
@@ -17,11 +17,10 @@ function ShopDetail(): JSX.Element {
       .catch((err) => {
         console.log('err:', err)
       })
-  }
+  }, [])
 
   return (
     <div>
-      <button onClick={onButtonClick}>更新</button>
       <h3>店名</h3>
       <p>{shop?.Name}</p>
       <h3>紹介文</h3>

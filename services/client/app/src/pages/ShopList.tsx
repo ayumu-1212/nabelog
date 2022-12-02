@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Shop from '../entity/shop'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom'
 function ShopList(): JSX.Element {
   const [shops, setShops] = useState<Shop[]>([])
 
-  const onButtonClick = (): void => {
+  useEffect(() => {
     axios
       .get('/shops')
       .then((res) => setShops(res.data.shops))
       .catch((err) => {
         console.log('err:', err)
       })
-  }
+  }, [])
 
   const trs = []
   for (let i = 0; i < shops.length; i++) {
@@ -30,7 +30,6 @@ function ShopList(): JSX.Element {
 
   return (
     <div>
-      <button onClick={onButtonClick}>更新</button>
       <table>
         <thead>
           <tr>
