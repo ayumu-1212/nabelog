@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 import Shop from '../entity/shop'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 
 function ShopList(): JSX.Element {
   const [shops, setShops] = useState<Shop[]>([])
+  const crumbs: Crumb[] = [
+    {
+      name: 'Home',
+      link: '/',
+    },
+    {
+      name: 'Shops',
+      link: '/shops',
+    },
+  ]
 
   useEffect(() => {
     axios
@@ -32,18 +43,21 @@ function ShopList(): JSX.Element {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>店名</TableCell>
-            <TableCell align="right">紹介文</TableCell>
-            <TableCell align="right">詳細</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{trs}</TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <BasicBreadcrumbs crumbs={crumbs} />
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>店名</TableCell>
+              <TableCell align="right">紹介文</TableCell>
+              <TableCell align="right">詳細</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{trs}</TableBody>
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 
