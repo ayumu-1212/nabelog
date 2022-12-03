@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Shop from '../entity/shop'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 
 function ShopList(): JSX.Element {
   const [shops, setShops] = useState<Shop[]>([])
@@ -18,29 +19,31 @@ function ShopList(): JSX.Element {
   const trs = []
   for (let i = 0; i < shops.length; i++) {
     trs.push(
-      <tr key={shops[i].ID}>
-        <td>{shops[i].Name}</td>
-        <td>{shops[i].Description}</td>
-        <td>
+      <TableRow key={shops[i].ID} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+        <TableCell component="th" scope="row">
+          {shops[i].Name}
+        </TableCell>
+        <TableCell align="right">{shops[i].Description}</TableCell>
+        <TableCell align="right">
           <Link to={`/shops/${shops[i].ID}`}>店舗詳細</Link>
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     )
   }
 
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>店名</th>
-            <th>紹介文</th>
-            <th>詳細</th>
-          </tr>
-        </thead>
-        <tbody>{trs}</tbody>
-      </table>
-    </div>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>店名</TableCell>
+            <TableCell align="right">紹介文</TableCell>
+            <TableCell align="right">詳細</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{trs}</TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 
