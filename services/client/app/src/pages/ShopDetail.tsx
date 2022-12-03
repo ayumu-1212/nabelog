@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import Shop from '../entity/shop'
+
 import axios from 'axios'
+
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
+import Shop from '../entity/shop'
 
 function ShopDetail(): JSX.Element {
   const [shop, setShop] = useState<Shop>()

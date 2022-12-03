@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material'
+
 import MenuIcon from '@mui/icons-material/Menu'
+import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material'
 
 export default function ButtonAppBar(): JSX.Element {
   return (

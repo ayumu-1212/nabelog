@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 
 function Default(): JSX.Element {
