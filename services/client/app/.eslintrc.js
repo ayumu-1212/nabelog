@@ -13,7 +13,8 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'comma-dangle': ['error', 'only-multiline'],
+    '@typescript-eslint/comma-dangle': 0,
     'space-before-function-paren': 0,
-    '@typescript-eslint/space-before-function-paren': 'warn',
+    '@typescript-eslint/space-before-function-paren': 0,
   },
 }
