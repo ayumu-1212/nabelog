@@ -18,7 +18,7 @@ import (
 
 func main() {
 	db := sqlConnect()
-	db.AutoMigrate(&model.Shop{})
+	db.AutoMigrate(&model.Shop{}, &model.Influencer{})
 	defer db.Close()
 
 	router := gin.Default()
@@ -60,8 +60,6 @@ func main() {
 
 	router.GET("/shops", func(context *gin.Context) {
 		db := sqlConnect()
-		clientIP := context.ClientIP()
-		fmt.Println(clientIP)
 		var shops []model.Shop
 		db.Order("created_at asc").Find(&shops)
 		defer db.Close()
@@ -112,7 +110,6 @@ func main() {
 
 
   router.DELETE("/shops/:id", func(context *gin.Context) {
-		fmt.Println("kokoha?")
 		db := sqlConnect()
 		n := context.Param("id")
 		id, err := strconv.Atoi(n)
@@ -132,8 +129,108 @@ func main() {
 		fmt.Println(context)
     name := context.PostForm("name")
     description := context.PostForm("description")
-    fmt.Println("create user " + name + " with description " + description)
+    fmt.Println("create shop " + name + " with description " + description)
     db.Create(&model.Shop{Name: name, Description: description})
+    defer db.Close()
+
+    context.Redirect(302, "/")
+  })
+
+	router.GET("/influencers", func(context *gin.Context) {
+		db := sqlConnect()
+		var influencers []model.Influencer
+		db.Order("created_at asc").Find(&influencers)
+		defer db.Close()
+		context.JSON(200, gin.H{
+			"message": "get influencers",
+			"influencers": influencers,
+		})
+	})
+
+	router.GET("/influencers/:id", func(context *gin.Context) {
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var influencer model.Influencer
+		db.First(&influencer, id)
+		defer db.Close()
+		context.JSON(200, gin.H{
+			"message": "get influencer",
+			"influencer": influencer,
+		})
+	})
+
+	router.PATCH("/influencers/:id", func(context *gin.Context) {
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var influencer model.Influencer
+		db.First(&influencer, id)
+
+    name := context.PostForm("name")
+    description := context.PostForm("description")
+    instagramLink := context.PostForm("instagramLink")
+    twitterLink := context.PostForm("twitterLink")
+    youtubeLink := context.PostForm("youtubeLink")
+    tiktokLink := context.PostForm("tiktokLink")
+    webLink := context.PostForm("webLink")
+
+		influencer.Name = name
+		influencer.Description = description
+		influencer.InstagramLink = instagramLink
+		influencer.TwitterLink = twitterLink
+		influencer.YoutubeLink = youtubeLink
+		influencer.TiktokLink = tiktokLink
+		influencer.WebLink = webLink
+		db.Save(&influencer)
+
+		defer db.Close()
+		context.JSON(200, gin.H{
+			"message": "get influencer",
+			"influencer": influencer,
+		})
+	})
+
+  router.DELETE("/influencers/:id", func(context *gin.Context) {
+		db := sqlConnect()
+		n := context.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic("id is not a number")
+		}
+		var influencer model.Influencer
+		db.First(&influencer, id)
+    db.Delete(&influencer)
+    defer db.Close()
+
+    context.Redirect(302, "/")
+  })
+
+  router.POST("/influencers/new", func(context *gin.Context) {
+    db := sqlConnect()
+    name := context.PostForm("name")
+    description := context.PostForm("description")
+    instagramLink := context.PostForm("instagramLink")
+    twitterLink := context.PostForm("twitterLink")
+    youtubeLink := context.PostForm("youtubeLink")
+    tiktokLink := context.PostForm("tiktokLink")
+    webLink := context.PostForm("webLink")
+    fmt.Println("create influencer " + name + " with description " + description)
+    db.Create(&model.Influencer{
+			Name: name, 
+			Description: description, 
+			InstagramLink: instagramLink, 
+			TwitterLink: twitterLink, 
+			YoutubeLink: youtubeLink, 
+			TiktokLink: tiktokLink, 
+			WebLink: webLink,
+		})
     defer db.Close()
 
     context.Redirect(302, "/")
