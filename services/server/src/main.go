@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	"server/model"
+
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gin-gonic/gin"
@@ -14,15 +16,9 @@ import (
 	"github.com/gin-contrib/cors"
 )
 
-type Shop struct {
-	gorm.Model
-	Name string
-	Description string
-}
-
 func main() {
 	db := sqlConnect()
-	db.AutoMigrate(&Shop{})
+	db.AutoMigrate(&model.Shop{})
 	defer db.Close()
 
 	router := gin.Default()
@@ -66,7 +62,7 @@ func main() {
 		db := sqlConnect()
 		clientIP := context.ClientIP()
 		fmt.Println(clientIP)
-		var shops []Shop
+		var shops []model.Shop
 		db.Order("created_at asc").Find(&shops)
 		defer db.Close()
 		context.JSON(200, gin.H{
@@ -82,7 +78,7 @@ func main() {
 		if err != nil {
 			panic("id is not a number")
 		}
-		var shop Shop
+		var shop model.Shop
 		db.First(&shop, id)
 		defer db.Close()
 		context.JSON(200, gin.H{
@@ -98,7 +94,7 @@ func main() {
 		if err != nil {
 			panic("id is not a number")
 		}
-		var shop Shop
+		var shop model.Shop
 		db.First(&shop, id)
 
     name := context.PostForm("name")
@@ -123,7 +119,7 @@ func main() {
 		if err != nil {
 			panic("id is not a number")
 		}
-		var shop Shop
+		var shop model.Shop
 		db.First(&shop, id)
     db.Delete(&shop)
     defer db.Close()
@@ -137,7 +133,7 @@ func main() {
     name := context.PostForm("name")
     description := context.PostForm("description")
     fmt.Println("create user " + name + " with description " + description)
-    db.Create(&Shop{Name: name, Description: description})
+    db.Create(&model.Shop{Name: name, Description: description})
     defer db.Close()
 
     context.Redirect(302, "/")
