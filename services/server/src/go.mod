@@ -1,4 +1,4 @@
-module server
+module nabelog.location
 
 go 1.19
 

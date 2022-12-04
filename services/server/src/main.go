@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"server/model"
+	"nabelog.location/model"
 
 	_ "github.com/go-sql-driver/mysql"
 
