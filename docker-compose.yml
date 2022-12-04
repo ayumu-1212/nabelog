@@ -7,14 +7,16 @@ services:
   server:
     build: ./services/server
     volumes:
-       - "./services/server/src/:/usr/src/"
-    working_dir: /usr/src
+       - "./services/server/src/:/usr/local/src/"
+    working_dir: /usr/local/src
     tty: true
     env_file:
       - ./services/db/.env
     depends_on:
       - db
     container_name: server
+    environment:
+      - "GOPATH=/usr/local/go"
   db:
     build: ./services/db
     tty: true
@@ -30,9 +32,9 @@ services:
   client:
     build: ./services/client
     volumes:
-       - "./services/client/app/:/usr/app/"
-       - node-modules:/usr/app/node_modules
-    working_dir: /usr/app
+       - "./services/client/app/:/usr/local/app/"
+       - node-modules:/usr/local/app/node_modules
+    working_dir: /usr/local/app
     tty: true
     ports: 
       - 3000:3000
