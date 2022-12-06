@@ -7,6 +7,7 @@ import ButtonAppBar from './components/organisms/Header'
 import Default from './pages/Default'
 import ShopDetail from './pages/ShopDetail'
 import ShopList from './pages/ShopList'
+import ShopNew from './pages/ShopNew'
 
 function App(): JSX.Element {
   return (
@@ -17,6 +18,7 @@ function App(): JSX.Element {
           <Routes>
             <Route path="/" element={<Default />} />
             <Route path="/shops" element={<ShopList />} />
+            <Route path="/shops/new" element={<ShopNew />} />
             <Route path="/shops/:id" element={<ShopDetail />} />
           </Routes>
         </BrowserRouter>

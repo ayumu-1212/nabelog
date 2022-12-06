@@ -69,6 +69,17 @@ func main() {
 		})
 	})
 
+  router.POST("/shops", func(context *gin.Context) {
+    db := sqlConnect()
+    name := context.PostForm("name")
+    description := context.PostForm("description")
+    fmt.Println("create shop " + name + " with description " + description)
+    db.Create(&model.Shop{Name: name, Description: description})
+    defer db.Close()
+
+    context.Redirect(302, "/")
+  })
+
 	router.GET("/shops/:id", func(context *gin.Context) {
 		db := sqlConnect()
 		n := context.Param("id")
@@ -119,18 +130,6 @@ func main() {
 		var shop model.Shop
 		db.First(&shop, id)
     db.Delete(&shop)
-    defer db.Close()
-
-    context.Redirect(302, "/")
-  })
-
-  router.POST("/shops/new", func(context *gin.Context) {
-    db := sqlConnect()
-		fmt.Println(context)
-    name := context.PostForm("name")
-    description := context.PostForm("description")
-    fmt.Println("create shop " + name + " with description " + description)
-    db.Create(&model.Shop{Name: name, Description: description})
     defer db.Close()
 
     context.Redirect(302, "/")
