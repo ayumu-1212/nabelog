@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { AddCircleOutline } from '@mui/icons-material'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Link,
+  Grid,
+  IconButton,
+} from '@mui/material'
 import axios from 'axios'
 
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
@@ -72,6 +84,15 @@ function ShopList(): JSX.Element {
   return (
     <>
       <BasicBreadcrumbs crumbs={crumbs} />
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
+        </Grid>
+        <Grid item xs={4} dir="rtl">
+          <IconButton color="primary" aria-label="add to shop" size="large" href="/shops/new">
+            <AddCircleOutline />
+          </IconButton>
+        </Grid>
+      </Grid>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
