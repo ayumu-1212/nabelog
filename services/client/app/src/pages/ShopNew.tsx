@@ -26,7 +26,7 @@ function ShopNew(): JSX.Element {
     params.append('description', form.description)
 
     axios
-      .post<ShopForm>('/shops', params)
+      .post('/shops', params)
       .then((res) => {
         console.log(res)
       })
@@ -69,7 +69,7 @@ function ShopNew(): JSX.Element {
       </div>
       <div>
         <Button variant="contained" onClick={onSubmit}>
-          Contained
+          Created
         </Button>
       </div>
     </Box>
