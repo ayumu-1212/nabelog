@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Store } from '@mui/icons-material'
+import { Store, Person } from '@mui/icons-material'
 import { Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
@@ -23,6 +23,14 @@ function Default(): JSX.Element {
               <Store />
             </ListItemIcon>
             <ListItemText primary="店舗一覧" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton href="/influencers">
+            <ListItemIcon>
+              <Person />
+            </ListItemIcon>
+            <ListItemText primary="インフルエンサー一覧" />
           </ListItemButton>
         </ListItem>
       </List>
