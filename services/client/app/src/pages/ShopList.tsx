@@ -20,6 +20,22 @@ function ShopList(): JSX.Element {
     },
   ]
 
+  const onDelete = (shopId: number): void => {
+    const newShops: Shop[] = shops.filter((shop) => shop.ID !== shopId)
+    setShops(newShops)
+    axios
+      .delete(`/shops/${shopId}`)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log('err:', err)
+      })
+      .finally(() => {
+        console.info('ローディング表示終了')
+      })
+  }
+
   useEffect(() => {
     axios
       .get('/shops')
@@ -38,7 +54,16 @@ function ShopList(): JSX.Element {
         </TableCell>
         <TableCell align="right">{shops[i].Description}</TableCell>
         <TableCell align="right">
-          <Link to={`/shops/${shops[i].ID}`}>店舗詳細</Link>
+          <Link href={`/shops/${shops[i].ID}`}>店舗詳細</Link>
+        </TableCell>
+        <TableCell align="right">
+          <Link
+            onClick={() => {
+              onDelete(shops[i].ID)
+            }}
+          >
+            削除
+          </Link>
         </TableCell>
       </TableRow>
     )
@@ -54,6 +79,7 @@ function ShopList(): JSX.Element {
               <TableCell>店名</TableCell>
               <TableCell align="right">紹介文</TableCell>
               <TableCell align="right">詳細</TableCell>
+              <TableCell align="right">削除</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{trs}</TableBody>
