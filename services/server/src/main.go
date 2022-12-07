@@ -146,6 +146,30 @@ func main() {
 		})
 	})
 
+	router.POST("/influencers", func(context *gin.Context) {
+    db := sqlConnect()
+    name := context.PostForm("name")
+    description := context.PostForm("description")
+    instagramLink := context.PostForm("instagramLink")
+    twitterLink := context.PostForm("twitterLink")
+    youtubeLink := context.PostForm("youtubeLink")
+    tiktokLink := context.PostForm("tiktokLink")
+    webLink := context.PostForm("webLink")
+    fmt.Println("create influencer " + name + " with description " + description)
+    db.Create(&model.Influencer{
+			Name: name, 
+			Description: description, 
+			InstagramLink: instagramLink, 
+			TwitterLink: twitterLink, 
+			YoutubeLink: youtubeLink, 
+			TiktokLink: tiktokLink, 
+			WebLink: webLink,
+		})
+    defer db.Close()
+
+    context.Redirect(302, "/")
+  })
+
 	router.GET("/influencers/:id", func(context *gin.Context) {
 		db := sqlConnect()
 		n := context.Param("id")
@@ -206,30 +230,6 @@ func main() {
 		var influencer model.Influencer
 		db.First(&influencer, id)
     db.Delete(&influencer)
-    defer db.Close()
-
-    context.Redirect(302, "/")
-  })
-
-  router.POST("/influencers/new", func(context *gin.Context) {
-    db := sqlConnect()
-    name := context.PostForm("name")
-    description := context.PostForm("description")
-    instagramLink := context.PostForm("instagramLink")
-    twitterLink := context.PostForm("twitterLink")
-    youtubeLink := context.PostForm("youtubeLink")
-    tiktokLink := context.PostForm("tiktokLink")
-    webLink := context.PostForm("webLink")
-    fmt.Println("create influencer " + name + " with description " + description)
-    db.Create(&model.Influencer{
-			Name: name, 
-			Description: description, 
-			InstagramLink: instagramLink, 
-			TwitterLink: twitterLink, 
-			YoutubeLink: youtubeLink, 
-			TiktokLink: tiktokLink, 
-			WebLink: webLink,
-		})
     defer db.Close()
 
     context.Redirect(302, "/")
