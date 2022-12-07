@@ -1,5 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+
+import { Store } from '@mui/icons-material'
+import { Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 
@@ -13,14 +15,17 @@ function Default(): JSX.Element {
   return (
     <>
       <BasicBreadcrumbs crumbs={crumbs} />
-      <div>
-        <h1>nabelogにようこそ！</h1>
-        <ul>
-          <li>
-            <Link to="/shops">店舗一覧</Link>
-          </li>
-        </ul>
-      </div>
+      <Typography variant="h3">nabelogにようこそ</Typography>
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton href="/shops">
+            <ListItemIcon>
+              <Store />
+            </ListItemIcon>
+            <ListItemText primary="店舗一覧" />
+          </ListItemButton>
+        </ListItem>
+      </List>
     </>
   )
 }

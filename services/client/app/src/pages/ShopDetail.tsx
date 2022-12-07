@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { Typography } from '@mui/material'
 import axios from 'axios'
 
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
@@ -39,6 +40,7 @@ function ShopDetail(): JSX.Element {
   return (
     <>
       <BasicBreadcrumbs crumbs={crumbs} />
+      <Typography variant="h3">店舗詳細ページ</Typography>
       <div>
         <h3>店名</h3>
         <p>{shop?.Name}</p>

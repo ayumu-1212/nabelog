@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
 import { AddCircleOutline } from '@mui/icons-material'
 import {
@@ -13,6 +12,7 @@ import {
   Link,
   Grid,
   IconButton,
+  Typography,
 } from '@mui/material'
 import axios from 'axios'
 
@@ -86,6 +86,7 @@ function ShopList(): JSX.Element {
       <BasicBreadcrumbs crumbs={crumbs} />
       <Grid container spacing={2}>
         <Grid item xs={8}>
+          <Typography variant="h3">店舗一覧ページ</Typography>
         </Grid>
         <Grid item xs={4} dir="rtl">
           <IconButton color="primary" aria-label="add to shop" size="large" href="/shops/new">
