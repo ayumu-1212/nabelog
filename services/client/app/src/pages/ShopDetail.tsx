@@ -7,13 +7,19 @@ import axios from 'axios'
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 import Shop from '../entity/shop'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 function ShopDetail(): JSX.Element {
   const [shop, setShop] = useState<Shop>()
   const params = useParams()
   const shopId: number = Number(params.id)
+  if (apiUrl === undefined) {
+    console.error('envieonment props "SERVER_URL" is undefined')
+    process.exit()
+  }
   useEffect(() => {
     axios
-      .get(`/shops/${shopId}`)
+      .get(`${apiUrl}/shops/${shopId}`)
       .then((res) => {
         setShop(res.data.shop)
       })

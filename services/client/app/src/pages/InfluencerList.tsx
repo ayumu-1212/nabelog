@@ -19,6 +19,8 @@ import axios from 'axios'
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 import Influencer from '../entity/influencer'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 function InfluencerList(): JSX.Element {
   const [influencers, setInfluencers] = useState<Influencer[]>([])
   const crumbs: Crumb[] = [
@@ -31,12 +33,16 @@ function InfluencerList(): JSX.Element {
       link: '/influencers',
     },
   ]
+  if (apiUrl === undefined) {
+    console.error('envieonment props "SERVER_URL" is undefined')
+    process.exit()
+  }
 
   const onDelete = (influencerId: number): void => {
     const newInfluencers: Influencer[] = influencers.filter((influencer) => influencer.ID !== influencerId)
     setInfluencers(newInfluencers)
     axios
-      .delete(`/influencers/${influencerId}`)
+      .delete(`${apiUrl}/influencers/${influencerId}`)
       .then((res) => {
         console.log(res)
       })
@@ -50,7 +56,7 @@ function InfluencerList(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/influencers')
+      .get(`${apiUrl}/influencers`)
       .then((res) => setInfluencers(res.data.influencers))
       .catch((err) => {
         console.log('err:', err)

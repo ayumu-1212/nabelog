@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Button, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 interface ShopForm {
   name: string
   description: string
@@ -24,9 +26,12 @@ function ShopNew(): JSX.Element {
     const params = new URLSearchParams()
     params.append('name', form.name)
     params.append('description', form.description)
-
+    if (apiUrl === undefined) {
+      console.error('envieonment props "SERVER_URL" is undefined')
+      process.exit()
+    }
     axios
-      .post('/shops', params)
+      .post(`${apiUrl}/shops`, params)
       .then((res) => {
         console.log(res)
       })

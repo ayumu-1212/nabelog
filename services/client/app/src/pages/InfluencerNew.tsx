@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Button, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 interface InfluencerForm {
   name: string
   description: string
@@ -29,7 +31,10 @@ function InfluencerNew(): JSX.Element {
   const handleChange = (event: any): void => {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
-
+  if (apiUrl === undefined) {
+    console.error('envieonment props "SERVER_URL" is undefined')
+    process.exit()
+  }
   const onSubmit = (): void => {
     const params = new URLSearchParams()
     params.append('name', form.name)
@@ -41,7 +46,7 @@ function InfluencerNew(): JSX.Element {
     params.append('webLink', form.webLink)
 
     axios
-      .post('/influencers', params)
+      .post(`${apiUrl}/influencers`, params)
       .then((res) => {
         console.log(res)
       })

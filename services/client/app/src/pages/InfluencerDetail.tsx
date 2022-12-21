@@ -7,13 +7,19 @@ import axios from 'axios'
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 import Influencer from '../entity/influencer'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 function InfluencerDetail(): JSX.Element {
   const [influencer, setInfluencer] = useState<Influencer>()
   const params = useParams()
   const influencerId: number = Number(params.id)
+  if (apiUrl === undefined) {
+    console.error('envieonment props "SERVER_URL" is undefined')
+    process.exit()
+  }
   useEffect(() => {
     axios
-      .get(`/influencers/${influencerId}`)
+      .get(`${apiUrl}/influencers/${influencerId}`)
       .then((res) => {
         setInfluencer(res.data.influencer)
       })

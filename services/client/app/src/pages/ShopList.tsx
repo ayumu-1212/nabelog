@@ -19,6 +19,8 @@ import axios from 'axios'
 import { BasicBreadcrumbs, Crumb } from '../components/organisms/Breadcrumbs'
 import Shop from '../entity/shop'
 
+const apiUrl = process.env.REACT_APP_SERVER_URL
+
 function ShopList(): JSX.Element {
   const [shops, setShops] = useState<Shop[]>([])
   const crumbs: Crumb[] = [
@@ -31,12 +33,15 @@ function ShopList(): JSX.Element {
       link: '/shops',
     },
   ]
-
+  if (apiUrl === undefined) {
+    console.error('envieonment props "SERVER_URL" is undefined')
+    process.exit()
+  }
   const onDelete = (shopId: number): void => {
     const newShops: Shop[] = shops.filter((shop) => shop.ID !== shopId)
     setShops(newShops)
     axios
-      .delete(`/shops/${shopId}`)
+      .delete(`${apiUrl}/shops/${shopId}`)
       .then((res) => {
         console.log(res)
       })
@@ -50,7 +55,7 @@ function ShopList(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/shops')
+      .get(`${apiUrl}/shops`)
       .then((res) => setShops(res.data.shops))
       .catch((err) => {
         console.log('err:', err)
