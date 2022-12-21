@@ -17,6 +17,7 @@ services:
     container_name: server
     environment:
       - "GOPATH=/usr/local/go"
+      - "NABELOG_ENV=development"
   db:
     build: ./services/db
     tty: true
