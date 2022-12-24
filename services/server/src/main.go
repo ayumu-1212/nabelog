@@ -19,13 +19,7 @@ func main() {
 	config.SetEnv()
 	fmt.Println(os.Getenv("CLIENT_URL"))
 	router := gin.Default()
-	if os.Getenv("NABELOG_ENV") == "production" {
-		// 本番環境
-		router.LoadHTMLGlob("../src/templates/*.html")
-	} else {
-		// 開発環境
-		router.LoadHTMLGlob("templates/*.html")
-	}
+	router.LoadHTMLGlob("templates/*.html")
   router.Use(cors.New(cors.Config{
     AllowOrigins: []string{
 			os.Getenv("CLIENT_URL"),
