@@ -1,10 +1,13 @@
 package mock
 
 import (
+	"os"
 	"log"
+	"fmt"
 	"time"
 
 	"nabelog.location/model"
+	"nabelog.location/config"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -13,14 +16,12 @@ import (
 )
 
 func mock() {
+	config.SetEnv()
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
-
   router.Use(cors.New(cors.Config{
     AllowOrigins: []string{
-			"http://133.125.51.93/",
-			// "http://localhost:3000",
-			// "https://127.0.0.1:3000",
+			os.Getenv("CLIENT_URL"),
     },
     AllowMethods: []string{
 			"POST",
