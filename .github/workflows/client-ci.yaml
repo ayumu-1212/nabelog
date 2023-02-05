@@ -1,0 +1,10 @@
+name: client-ci
+on: 
+  pull_request:
+    types: [opened]
+jobs:
+  lint-run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "this is pen"
+    
