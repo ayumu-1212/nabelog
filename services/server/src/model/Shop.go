@@ -4,6 +4,6 @@ import "github.com/jinzhu/gorm"
 
 type Shop struct {
 	gorm.Model
-	Name string
+	Name        string
 	Description string
 }
