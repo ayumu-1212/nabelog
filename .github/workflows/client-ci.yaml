@@ -1,20 +1,18 @@
 name: client-ci
-on: 
-  pull_request:
-    types: [opened]
+on: pull_request
 jobs:
   lint-run:
     runs-on: ubuntu-latest
     steps:
       - name: checkout pushed commit
         uses: actions/checkout@v3
-      - runs: cd nabelog/services/client/app/
       - name: set up node
         uses: actions/setup-node@v3
         with:
           node-version: 16.15.0
       - name: run lint
-        runs: |
+        run: |
+          cd services/client/app/
           npm install
           npm run lint
     
