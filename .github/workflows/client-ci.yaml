@@ -1,7 +1,5 @@
 name: client-ci
-on: 
-  pull_request:
-    types: [opened]
+on: pull_request
 jobs:
   lint-run:
     runs-on: ubuntu-latest
