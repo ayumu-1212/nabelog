@@ -6,13 +6,13 @@ jobs:
     steps:
       - name: checkout pushed commit
         uses: actions/checkout@v3
-      - run: cd services/client/app/
       - name: set up node
         uses: actions/setup-node@v3
         with:
           node-version: 16.15.0
       - name: run lint
         run: |
+          cd services/client/app/
           npm install
           npm run lint
     
