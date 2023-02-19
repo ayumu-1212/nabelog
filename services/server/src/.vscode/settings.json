@@ -1,0 +1,11 @@
+{
+  "go.toolsManagement.autoUpdate": true,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "cmd": "goimports -w ${file}",
+        "match": "\\.go$"
+      }
+    ]
+  }
+}
