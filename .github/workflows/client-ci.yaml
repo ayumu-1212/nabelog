@@ -6,5 +6,15 @@ jobs:
   lint-run:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "this is pen"
+      - name: checkout pushed commit
+        uses: actions/checkout@v3
+      - runs: cd nabelog/services/client/app/
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0
+      - name: run lint
+        runs: |
+          npm install
+          npm run lint
     
