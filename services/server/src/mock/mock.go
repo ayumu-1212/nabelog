@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//nolint:unused
 func mock() {
 	config.SetEnv()
 	router := gin.Default()
