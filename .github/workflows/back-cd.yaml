@@ -1,0 +1,20 @@
+name: back-cd
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout pushed commit
+        uses: actions/checkout@v3
+      - name: set up go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.1
+      - name: start building
+        run: go build main.go
+        working-directory: ./services/server/src
+      - name: deketa?
+        run: ls services/server/src
