@@ -9,7 +9,7 @@ jobs:
       - name: set up go
         uses: actions/setup-go@v3
         with:
-          node-version: 1.19.1
+          go-version: 1.19.1
       - name: run lint
         uses: golangci/golangci-lint-action@v3
         with:
