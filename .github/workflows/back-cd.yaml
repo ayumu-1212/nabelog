@@ -1,8 +1,10 @@
 name: back-cd
 on:
-  push:
-    branches:
-      - main
+  pull_request
+  # # テスト用で一旦コメントアウト
+  # push:
+  #   branches:
+  #     - main
 jobs:
   build:
     runs-on: ubuntu-latest
