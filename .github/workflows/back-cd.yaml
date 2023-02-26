@@ -19,4 +19,20 @@ jobs:
         run: go build main.go
         working-directory: ./services/server/src
       - name: deketa?
-        run: ls services/server/src
+        run: ls -l services/server/src
+      - name: archive build file
+        uses: actions/upload-artifact@v3
+        with:
+          name: nabelog-server-build-main-file
+          path: services/server/src/main
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download build file
+        uses: actions/download-artifact@v3
+        with:
+          name: nabelog-server-build-main-file
+      - name: deketa?
+        run: ls -l
