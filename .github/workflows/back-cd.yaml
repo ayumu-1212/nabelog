@@ -34,15 +34,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nabelog-server-build-main-file
-      - name: scp for back server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SK }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "./main"
-          target: "/usr/local/src/"
+      # - name: scp for back server
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.SK }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     source: "./main"
+      #     target: "/usr/local/src/"
       - name: deketa?
         uses: appleboy/ssh-action@master
         with: 
