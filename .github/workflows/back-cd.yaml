@@ -42,7 +42,9 @@ jobs:
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
       - name: scp for back server
-        run: scp -i ~/.ssh/id_rsa main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
+        env:
+          USER_NAME_HOST: "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}"
+        run: scp -i ~/.ssh/id_rsa main $USER_NAME_HOST:/usr/local/src/
       - name: deketa?
         uses: appleboy/ssh-action@master
         with: 
