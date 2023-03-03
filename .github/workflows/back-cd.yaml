@@ -34,5 +34,20 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nabelog-server-build-main-file
+      - name: scp for back server
+        uses: applyboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SK }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./main"
+          target: "/usr/local/src/"
       - name: deketa?
-        run: ls -l
+        users: applyboy/ssh-action@master
+        with: 
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SK }}
+          port: ${{ secrets.SSH_PORT }}
+          script: ls -l /usr/local/src/
