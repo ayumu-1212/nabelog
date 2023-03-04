@@ -1,0 +1,67 @@
+name: back-cd
+on:
+  pull_request
+  # # テスト用で一旦コメントアウト
+  # push:
+  #   branches:
+  #     - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout pushed commit
+        uses: actions/checkout@v3
+      - name: set up go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.1
+      - name: start building
+        run: go build main.go
+        working-directory: ./services/server/src
+      - name: deketa?
+        run: ls -l services/server/src
+      - name: archive build file
+        uses: actions/upload-artifact@v3
+        with:
+          name: nabelog-server-build-main-file
+          path: services/server/src/main
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download build file
+        uses: actions/download-artifact@v3
+        with:
+          name: nabelog-server-build-main-file
+      - name: setup secretKey
+        env:
+          PRIVATE_KEY: ${{ secrets.SK }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: systemctl is-acitve main by ssh
+        id: check_active_pre
+        run: |
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
+      - name: systemctl stop main by ssh
+        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS == 'active'
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl stop start-apiserver.service"
+      - name: main for back server by scp
+        run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
+      - name: systemctl start main by ssh
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl start start-apiserver.service"
+      - name: systemctl is-acitve main by ssh
+        id: check_active_post
+        run: |
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
+      - name: check active
+        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS != 'active'
+        run: exit 3
+
