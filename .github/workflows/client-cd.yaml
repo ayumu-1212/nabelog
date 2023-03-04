@@ -25,12 +25,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: mkdir build
+        run: mkdir build
       - name: download build folder
         uses: actions/download-artifact@v3
         with:
           name: nabelog-client-build-folder
+          path: build
       - name: deketa?
         run: |
           ls
-          cd build
-          ls
+          ls build/
