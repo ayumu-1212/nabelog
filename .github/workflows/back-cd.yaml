@@ -43,18 +43,34 @@ jobs:
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H ${HOST} >> ~/.ssh/known_hosts
-      - name: scp for back server
-        env:
-          USER_NAME: ${{ secrets.SSH_USERNAME }}
-          HOST: ${{ secrets.SSH_HOST }}
-        run: scp -i ~/.ssh/id_rsa main ${USER_NAME}@${HOST}:/usr/local/src/
-      - name: deketa?
+      - name: systemctl stop main by ssh
         uses: appleboy/ssh-action@master
-        with: 
+        with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SK }}
+          key_path: ~/.ssh/id_rsa
           port: ${{ secrets.SSH_PORT }}
-          script: ls -l /usr/local/src/
+          script: |
+            sudo systemctl status start-apiserver.service
+            sudo systemctl stop start-apiserver.service
+            sudo systemctl status start-apiserver.service
+      - name: scp for back server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key_path: ~/.ssh/id_rsa
+          port: ${{ secrets.SSH_PORT }}
+          source: "main"
+          target: "/usr/local/src"
+      - name: systemctl start main by ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key_path: ~/.ssh/id_rsa
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            sudo systemctl start start-apiserver.service
+            sudo systemctl status start-apiserver.service
