@@ -37,40 +37,25 @@ jobs:
       - name: setup secretKey
         env:
           PRIVATE_KEY: ${{ secrets.SK }}
-          HOST: ${{ secrets.SSH_HOST }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
-          ssh-keyscan -H ${HOST} >> ~/.ssh/known_hosts
-      # - name: systemctl stop main by ssh
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     key: ${{ secrets.SK }}
-      #     port: ${{ secrets.SSH_PORT }}
-      #     script: |
-      #       sudo systemctl status start-apiserver.service
-      #       sudo systemctl stop start-apiserver.service
-      #       sudo systemctl status start-apiserver.service
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: systemctl stop main by ssh
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
+          sudo systemctl status start-apiserver.service
+          sudo systemctl stop start-apiserver.service
+          sudo systemctl status start-apiserver.service
+          exit
       - name: scp for back server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SK }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "main"
-          target: "/usr/local/src"
+        run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
       - name: systemctl start main by ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SK }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            sudo systemctl start start-apiserver.service
-            sudo systemctl status start-apiserver.service
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
+          sudo systemctl start start-apiserver.service
+          sudo systemctl status start-apiserver.service
+          exit
