@@ -60,6 +60,6 @@ jobs:
           IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
           echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
       - name: check active
-        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS != 'active'
+        if: steps.check_active_post.outputs.IS_ACTIVE_STATUS != 'active'
         run: exit 3
 
