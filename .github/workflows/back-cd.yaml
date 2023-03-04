@@ -47,8 +47,10 @@ jobs:
       - name: systemctl is-acitve main by ssh
         id: check_active_pre
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"
+        outputs:
+          is-active_status: ${{ steps.check_active_pre.outputs.stdout }}
       - name: check outputs
-        run: echo "${{ steps.check_active_pre.outputs.value }}"
+        run: echo "${{ steps.check_active_pre.outputs.is-active_status }}"
       - name: systemctl stop main by ssh
         if: steps.check_active_pre.outputs.stdout == 'active'
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl stop start-apiserver.service"
