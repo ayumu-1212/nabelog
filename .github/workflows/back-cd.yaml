@@ -49,7 +49,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key_path: ~/.ssh/id_rsa
+          key_path: "~/.ssh/id_rsa"
           port: ${{ secrets.SSH_PORT }}
           script: |
             sudo systemctl status start-apiserver.service
@@ -60,7 +60,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key_path: ~/.ssh/id_rsa
+          key_path: "~/.ssh/id_rsa"
           port: ${{ secrets.SSH_PORT }}
           source: "main"
           target: "/usr/local/src"
@@ -69,7 +69,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key_path: ~/.ssh/id_rsa
+          key_path: "~/.ssh/id_rsa"
           port: ${{ secrets.SSH_PORT }}
           script: |
             sudo systemctl start start-apiserver.service
