@@ -32,7 +32,25 @@ jobs:
         with:
           name: nabelog-client-build-folder
           path: build
-      - name: deketa?
+      - name: setup secretKey
+        env:
+          PRIVATE_KEY: ${{ secrets.SK }}
         run: |
-          ls
-          ls build/
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_CLIENT_HOST }} >> ~/.ssh/known_hosts
+      - name: build folder for client server by scp
+        run: scp -r build ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }}:/usr/local/src/build
+      - name: restart nginx
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "systemctl restart nginx"
+      - name: systemctl is-acitve nginx by ssh
+        id: check_active_post
+        run: |
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl is-active nginx"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
+      - name: check active
+        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS != 'active'
+        run: exit 3
