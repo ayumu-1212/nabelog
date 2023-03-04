@@ -44,6 +44,11 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: systemctl is-acitve main by ssh
+        id: check_active
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"
+      - name: check outputs
+        run: echo ${{ steps.check_active.outputs }}
       - name: systemctl stop main by ssh
         run: |
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
@@ -51,7 +56,7 @@ jobs:
               sudo systemctl stop start-apiserver.service; 
             fi
             "
-      - name: scp for back server
+      - name: main for back server by scp
         run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
       - name: systemctl start main by ssh
         run: |
