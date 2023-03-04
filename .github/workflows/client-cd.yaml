@@ -1,0 +1,34 @@
+name: client-cd
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout pushed commit
+        uses: actions/checkout@v3
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0
+      - name: run build
+        run: npm run build
+        working-directory: ./services/client/app
+      - name: archive build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: nabelog-client-build-folder
+          path: services/client/app/
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download build folder
+        uses: actions/download-artifact@v3
+        with:
+          name: nabelog-client-build-folder
+      - name: deketa?
+        run: |
+          ls
+          cd build
+          ls
