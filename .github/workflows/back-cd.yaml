@@ -47,8 +47,8 @@ jobs:
       - name: systemctl is-acitve main by ssh
         id: check_active_pre
         run: |
-          is-active_status=$(ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service")
-          echo "IS_ACTIVE_STATUS=${is-active_status}" >> $GITHUB_OUTPUT
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
       - name: check outputs
         run: echo "${{ steps.check_active_pre.outputs.IS_ACTIVE_STATUS }}"
       - name: systemctl stop main by ssh
