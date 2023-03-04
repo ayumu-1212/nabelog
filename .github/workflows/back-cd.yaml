@@ -46,7 +46,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: systemctl is-acitve main by ssh
         id: check_active_pre
-        run: echo '::set-output name=is_active::$(ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"'
+        run: echo '::set-output name=is_active::$(ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service")'
       - name: check outputs
         run: echo '${{ steps.check_active_pre.outputs.is_active }}'
       - name: systemctl stop main by ssh
