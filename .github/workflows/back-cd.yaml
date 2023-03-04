@@ -45,7 +45,7 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: dou?
-        run: sudo systemctl status start-apiserver.service
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} sudo systemctl status start-apiserver.service
       - name: systemctl stop main by ssh
         run: |
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
