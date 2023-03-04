@@ -1,0 +1,59 @@
+name: client-cd
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout pushed commit
+        uses: actions/checkout@v3
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0
+      - name: run build
+        run: |
+          npm install
+          npm run build
+        working-directory: ./services/client/app
+      - name: archive build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: nabelog-client-build-folder
+          path: services/client/app/build
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: mkdir build
+        run: mkdir build
+      - name: download build folder
+        uses: actions/download-artifact@v3
+        with:
+          name: nabelog-client-build-folder
+          path: build
+      - name: setup secretKey
+        env:
+          PRIVATE_KEY: ${{ secrets.SK }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_CLIENT_HOST }} >> ~/.ssh/known_hosts
+      - name: build folder for client server by scp
+        run: scp -r build ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }}:/usr/local/src/build
+      - name: restart nginx
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl restart nginx"
+      - name: systemctl is-acitve nginx by ssh
+        id: check_active_post
+        run: |
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl is-active nginx"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
+      - name: check active
+        if: steps.check_active_post.outputs.IS_ACTIVE_STATUS != 'active'
+        run: exit 3
