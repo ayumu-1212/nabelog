@@ -19,7 +19,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: nabelog-client-build-folder
-          path: services/client/app/
+          path: services/client/app/build/
   
   deploy:
     needs: build
