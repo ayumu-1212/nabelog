@@ -49,10 +49,8 @@ jobs:
         run: |
           IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
           echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
-      - name: check outputs
-        run: echo "${{ steps.check_active_pre.outputs.IS_ACTIVE_STATUS }}"
       - name: systemctl stop main by ssh
-        if: steps.check_active_pre.outputs.stdout == 'active'
+        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS == 'active'
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl stop start-apiserver.service"
       - name: main for back server by scp
         run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
@@ -60,8 +58,10 @@ jobs:
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl start start-apiserver.service"
       - name: systemctl is-acitve main by ssh
         id: check_active_post
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"
+        run: |
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
       - name: check active
-        if: steps.check_active_post.outputs.stdout != 'active'
+        if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS != 'active'
         run: exit 3
 
