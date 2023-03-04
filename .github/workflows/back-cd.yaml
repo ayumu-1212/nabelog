@@ -34,13 +34,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nabelog-server-build-main-file
-      - name: download secretKey
+      - name: setup secretKey
         env:
           PRIVATE_KEY: ${{ secrets.SK }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H ${HOST} >> ~/.ssh/known_hosts
       - name: scp for back server
         env:
           USER_NAME: ${{ secrets.SSH_USERNAME }}
