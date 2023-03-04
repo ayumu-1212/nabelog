@@ -59,3 +59,5 @@ jobs:
             sudo systemctl start start-apiserver.service;
             sudo systemctl status start-apiserver.service;
           "
+      - name: deketa?
+        run: ls
