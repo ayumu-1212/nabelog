@@ -41,23 +41,23 @@ jobs:
           chmod 700 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SSH_BACK_HOST }} >> ~/.ssh/known_hosts
       - name: systemctl is-acitve main by ssh
         id: check_active_pre
         run: |
-          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_BACK_HOST }} "sudo systemctl is-active start-apiserver.service"`
           echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
       - name: systemctl stop main by ssh
         if: steps.check_active_pre.outputs.IS_ACTIVE_STATUS == 'active'
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl stop start-apiserver.service"
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_BACK_HOST }} "sudo systemctl stop start-apiserver.service"
       - name: main for back server by scp
-        run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
+        run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_BACK_HOST }}:/usr/local/src/
       - name: systemctl start main by ssh
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl start start-apiserver.service"
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_BACK_HOST }} "sudo systemctl start start-apiserver.service"
       - name: systemctl is-acitve main by ssh
         id: check_active_post
         run: |
-          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "sudo systemctl is-active start-apiserver.service"`
+          IS_ACTIVE_STATUS=`ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_BACK_HOST }} "sudo systemctl is-active start-apiserver.service"`
           echo "IS_ACTIVE_STATUS=${IS_ACTIVE_STATUS}" >> $GITHUB_OUTPUT
       - name: check active
         if: steps.check_active_post.outputs.IS_ACTIVE_STATUS != 'active'
