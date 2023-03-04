@@ -44,13 +44,14 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      # - name: systemctl stop main by ssh
-      #   run: |
-      #     ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-      #       sudo systemctl status start-apiserver.service;
-      #       sudo systemctl stop start-apiserver.service;
-      #       sudo systemctl status start-apiserver.service;
-      #     "
+      - name: dou?
+        run: sudo systemctl status start-apiserver.service
+      - name: systemctl stop main by ssh
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+            sudo systemctl stop start-apiserver.service;
+            sudo systemctl status start-apiserver.service;
+          "
       - name: scp for back server
         run: scp main ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/local/src/
       - name: systemctl start main by ssh
