@@ -37,6 +37,7 @@ jobs:
       - name: setup secretKey
         env:
           PRIVATE_KEY: ${{ secrets.SK }}
+          HOST: ${{ secrets.SSH_HOST }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
