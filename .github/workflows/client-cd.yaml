@@ -45,10 +45,14 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_CLIENT_HOST }} >> ~/.ssh/known_hosts
+      - name: stop nginx
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl stop nginx"
+      - name: delete build folder
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo rm -rf /usr/local/src/app/build/"
       - name: build folder for client server by scp
         run: scp -r build ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }}:/usr/local/src/app
-      - name: restart nginx
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl restart nginx"
+      - name: start nginx
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_CLIENT_HOST }} "sudo systemctl start nginx"
       - name: systemctl is-acitve nginx by ssh
         id: check_active_post
         run: |
